@@ -1,2 +1,2 @@
 # tuckygucky
-tuckyguckywucky
+tuckyguckywucky [Quaver](https://github.com/Quaver) plugin
