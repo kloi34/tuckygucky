@@ -20,12 +20,14 @@ function draw()
     imgui.PushStyleVar(imgui_style_var.FrameRounding, 12)
     
     imgui.Begin("tuckygucky", imgui_window_flags.AlwaysAutoResize)
+    local oneNoteSelected = #state.selectedHitObjects == 1
+
     imgui.Columns(2, " ", false)
     imgui.Text("current: ")
     imgui.Text("selected note: ")
     imgui.NextColumn()
     imgui.Text(state.SelectedScrollGroupId)
-    if #state.selectedHitObjects == 1 then imgui.Text(state.selectedHitObjects[1].TimingGroup) end
+    if oneNoteSelected then imgui.Text(state.selectedHitObjects[1].TimingGroup) end
     imgui.Columns(1)
     
     imgui.Dummy({0, 0})
@@ -33,8 +35,8 @@ function draw()
     imgui.Dummy({0, 0})
     
     imgui.BeginDisabled(#state.selectedHitObjects == 0)
-    -- Turn selected notes into unique timing groups
     if imgui.Button("tg-ify notes", BUTTON_SIZE) then
+        -- Turn selected notes into unique timing groups
         local batchActions = {}
         for i, note in ipairs(state.selectedHitObjects) do
             --[[
@@ -59,14 +61,11 @@ function draw()
     end
     imgui.EndDisabled()
     imgui.SameLine()
-    local oneNoteSelected = #state.selectedHitObjects == 1
     imgui.BeginDisabled(not oneNoteSelected)
     local doTuckyGucky = utils.IsKeyPressed(keys.B) and oneNoteSelected
-    -- Set current timing group to selected note's timing group
     if imgui.Button("note tg to\ncurrent tg", BUTTON_SIZE) or doTuckyGucky then
-        print("E!", "sex")
-        -- Waiting for https://github.com/Quaver/Quaver/pull/4380
-        --state.SelectedScrollGroupId = state.selectedHitObjects[1].TimingGroup
+        -- Set current timing group to selected note's timing group
+        state.SelectedScrollGroupId = state.selectedHitObjects[1].TimingGroup
     end
     imgui.EndDisabled()
     local winPos = imgui.GetWindowPos()
